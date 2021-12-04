@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html>
-    <head></head>
-    <body>
+{% extends 'base.html' %}
+{% block content %}
         <p>When authorizing with GitHub, we received the following error:</p>
         <p>Error name: {{error}}</p>
         <p>Error reason: {{reason}}</p>
         <hr>
         <p>You may report this incident to the staff.</p>
-    </body>
-</html>
+{% endblock %}

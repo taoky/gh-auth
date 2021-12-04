@@ -1,10 +1,24 @@
-<!DOCTYPE html>
-<html>
-    <head></head>
-    <body>
-        <form method="post">
+{% extends 'base.html' %}
+{% block content %}
+        <form id="form">
             <input type="text" name="cipher" placeholder="cipher">
             <input type="submit" value="Submit">
         </form>
-    </body>
-</html>
+        <p>Query result:</p>
+        <p id="result"></p>
+
+        <script>
+            const form = document.getElementById('form');
+            const result_p = document.getElementById('result');
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const formdata = new FormData(form);
+                fetch("/check", {
+                    method: "POST",
+                    body: formdata
+                }).then(response => response.text()).then(text => {
+                    result_p.innerText = text;
+                });
+            })
+        </script>
+{% endblock %}

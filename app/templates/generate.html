@@ -1,11 +1,22 @@
-<!DOCTYPE html>
-<html>
-    <head></head>
-    <body>
+{% extends 'base.html' %}
+{% block content %}
+<style type="text/css">
+    .token {
+        font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
+        margin-top: 0;
+        word-wrap: normal;
+        word-break: normal;
+        margin-bottom: 0;
+        border-radius: 6px;
+        line-height: 1.45;
+        font-size: 85%;
+        overflow: auto;
+        padding: 16px;
+    }
+</style>
         <p>Please submit following token to the staff:</p>
-        <p>{{token}}</p>
+        <pre class="token">{{token}}</pre>
         <hr>
         <p>The token stores your student ID and GitHub username, and is encrypted by AES.</p>
         <p><a href="/logout">Logout</a></p>
-    </body>
-</html>
+{% endblock %}

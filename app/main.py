@@ -8,8 +8,17 @@ import uuid
 import secrets
 import json
 import base64
-import config
 import traceback
+
+try:
+    import config
+except ImportError:
+    print(
+        """config.py not found. Please copy config.example.py to config.py and modify corresponding values.
+    And if you are using Docker image, please mount config.py to /app/config.py in container."""
+    )
+    exit(1)
+
 
 app = Flask(__name__)
 app.secret_key = config.SECRET_KEY
