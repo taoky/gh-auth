@@ -1,0 +1,10 @@
+CLIENT_ID="Register your client on GitHub!"
+CLIENT_SECRET="Register your client on GitHub!"
+PASSPHRASE="Passphrase for AES"
+CAS_URL="https://passport.ustc.edu.cn/login"
+CAS_VALIDATE="https://passport.ustc.edu.cn/serviceValidate"
+CAS_REDIRECT="http://home.ustc.edu.cn/~zzh1996/cas_redirect.html"
+CAS_LOGOUT="https://passport.ustc.edu.cn/logout"
+SECRET="Secret for flask session"
+HOST="https://ghauth.taoky.moe"
+ADMIN=['PB12345678', 'SA87654321']
