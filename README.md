@@ -8,7 +8,7 @@ A flask website to validate the relationship between student ID and GitHub accou
 
 ```shell
 $ docker pull ghcr.io/taoky/gh-auth:main
-$ wget https://raw.githubusercontent.com/taoky/gh-auth/main/app/config.example.py -O app/config.py
+$ wget https://raw.githubusercontent.com/taoky/gh-auth/main/app/config.example.py -O config.py
 $ vim config.py  # modify the config.py to your settings
 $ docker run -p 15000:80 -v ${PWD}/config.py:/app/config.py --rm ghcr.io/taoky/gh-auth:main
 ```
@@ -47,7 +47,7 @@ CAS_REDIRECT="http://home.ustc.edu.cn/~zzh1996/cas_redirect.html"  # replace to 
 CAS_LOGOUT="https://passport.ustc.edu.cn/logout"
 SECRET="Secret for flask session"
 HOST="https://ghauth.taoky.moe"  # GitHub auth relies on this value.
-ADMIN=['PB12345678', 'SA87654321']  # Admin username in CAS. People with these usernames can decrypt token by the web interface.
+ADMIN=['PB12345678', 'SA87654321']  # Admin username in CAS. People with these usernames can decrypt tokens by the web interface.
 ```
 
 This app uses no database and its security relies on the secrecy of `config.py`. And please note that it does NOT have forward secrecy so DON'T let AES passphrase leak!
