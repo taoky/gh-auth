@@ -80,8 +80,7 @@ def about():
 @app.route("/logout")
 def logout():
     session.clear()
-    return """Your session is now cleared. 
-    Please also remember to logout from CAS and GitHub if you are using a public computer."""
+    return render_template("logout.html", cas_logout=cas_logout)
 
 
 @app.route("/auth")
