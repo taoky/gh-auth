@@ -9,6 +9,7 @@ A flask website to validate the relationship between student ID and GitHub accou
 ```shell
 $ docker pull ghcr.io/taoky/gh-auth:main
 $ wget https://raw.githubusercontent.com/taoky/gh-auth/main/app/config.example.py -O config.py
+$ docker run --rm ghcr.io/taoky/gh-auth:main python /app/utils/nacl_gen.py  # generate NACL public key and private key
 $ vim config.py  # modify the config.py to your settings
 $ docker run -p 15000:80 -v ${PWD}/config.py:/app/config.py --rm ghcr.io/taoky/gh-auth:main
 ```
@@ -24,7 +25,10 @@ $ python -m venv venv
 $ . venv/bin/activate
 (venv) $ pip install -r requirements.txt
 (venv) $ cp app/config.example.py app/config.py
-(venv) $ vim app/config.py  # modify the config.py to your settings
+(venv) $ python utils/nacl_gen.py
+NACL_PRIVKEY="PRIVATEKEY"
+NACL_PUBKEY="PUBKEY"
+(venv) $ vim app/config.py  # modify the config.py to your settings and use generated NACL_PRIVKEY and NACL_PUBKEY
 (venv) $ cd app
 (venv) $ FLASK_RUN_PORT=15000 FLASK_APP=main.py flask run
 ```
