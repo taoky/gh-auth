@@ -43,6 +43,7 @@ nacl_privkey = config.NACL_PRIVKEY
 signing_key = nacl.signing.SigningKey(nacl_privkey, encoder=nacl.encoding.HexEncoder)
 verify_key = nacl.signing.VerifyKey(nacl_pubkey, encoder=nacl.encoding.HexEncoder)
 
+
 def check_ticket(ticket, service):
     validate = cas_validate + "?" + urlencode({"service": service, "ticket": ticket})
     with urlopen(validate) as req:
@@ -158,11 +159,11 @@ def gh_callback():
 def generate():
     if "github" not in session or "cas" not in session:
         return redirect("auth")
-    message = f"{session['github']}:{session['cas']}".encode("utf-8")
-    signature = signing_key.sign(message, encoder=nacl.encoding.HexEncoder).signature
-    return render_template(
-        "generate.html", token=f'{message}:{signature}'
-    )
+    message = f"{session['github']}:{session['cas']}"
+    signature = signing_key.sign(
+        message.encode("utf-8"), encoder=nacl.encoding.HexEncoder
+    ).signature.decode("utf-8")
+    return render_template("generate.html", token=f"{message}:{signature}")
 
 
 @app.route("/check", methods=["GET", "POST"])
@@ -173,7 +174,7 @@ def check():
         try:
             smessage = request.form["smessage"]
             github, cas, signature = smessage.split(":")
-            message = f'{github}:{cas}'.encode('utf-8')
+            message = f"{github}:{cas}".encode("utf-8")
             verify_key.verify(message, signature=binascii.unhexlify(signature))
             return f"OK. GitHub account = {github}, CAS account = {cas}"
         except Exception as e:
