@@ -17,6 +17,7 @@
         <p>Please submit following token to the staff:</p>
         <pre class="token">{{token}}</pre>
         <hr>
-        <p>The token stores your student ID and GitHub username, and is encrypted by AES.</p>
+        <p>The token stores your student ID and GitHub username, and is signed by libsodium (Ed25519).</p>
+        <p>DO NOT share this token to anyone else as it contains your personal information!</p>
         <p><a href="/logout">Logout</a></p>
 {% endblock %}

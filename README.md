@@ -40,14 +40,14 @@ Create a new GitHub oauth app at <https://github.com/settings/applications/new>.
 ```python
 CLIENT_ID="Register your client on GitHub!"
 CLIENT_SECRET="Register your client on GitHub!"
-PASSPHRASE="Passphrase for AES"  # KEEP IT A SECRET!
+NACL_PUBKEY="generate by utils/nacl_gen.py"
+NACL_PRIVKEY="generate by utils/nacl_gen.py"
 CAS_URL="https://passport.ustc.edu.cn/login"  # replace to your CAS server if not applicable.
 CAS_VALIDATE="https://passport.ustc.edu.cn/serviceValidate"
 CAS_REDIRECT="http://home.ustc.edu.cn/~zzh1996/cas_redirect.html"  # replace to your own redirect page.
 CAS_LOGOUT="https://passport.ustc.edu.cn/logout"
 SECRET="Secret for flask session"
 HOST="https://ghauth.taoky.moe"  # GitHub auth relies on this value.
-ADMIN=['PB12345678', 'SA87654321']  # Admin username in CAS. People with these usernames can decrypt token by the web interface.
 ```
 
-This app uses no database and its security relies on the secrecy of `config.py`. And please note that it does NOT have forward secrecy so DON'T let AES passphrase leak!
+This app uses no database and its security relies on the secrecy of `config.py`. If `config.py` leaks out then your GitHub oauth app will be compromised and user can generate forged tokens.
