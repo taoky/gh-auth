@@ -3,11 +3,12 @@ from urllib.parse import urlencode, urljoin
 from urllib.request import urlopen
 from urllib import request as url_request
 from xml.etree import ElementTree
-from Crypto.Cipher import AES
+import nacl.encoding
+import nacl.signing
 import uuid
 import secrets
 import json
-import base64
+import binascii
 import traceback
 
 try:
@@ -29,7 +30,6 @@ github_validate = "https://github.com/login/oauth/access_token"
 github_user_api = "https://api.github.com/user"
 client_id = config.CLIENT_ID
 client_secret = config.CLIENT_SECRET
-passphrase = config.PASSPHRASE
 
 # cas auth
 cas_url = config.CAS_URL
@@ -38,7 +38,10 @@ cas_redirect = config.CAS_REDIRECT
 cas_logout = config.CAS_LOGOUT
 
 host = config.HOST
-admin_list = config.ADMIN
+nacl_pubkey = config.NACL_PUBKEY
+nacl_privkey = config.NACL_PRIVKEY
+signing_key = nacl.signing.SigningKey(nacl_privkey, encoder=nacl.encoding.HexEncoder)
+verify_key = nacl.signing.VerifyKey(nacl_pubkey, encoder=nacl.encoding.HexEncoder)
 
 
 def check_ticket(ticket, service):
@@ -156,34 +159,24 @@ def gh_callback():
 def generate():
     if "github" not in session or "cas" not in session:
         return redirect("auth")
-    aes = AES.new(passphrase.encode("utf-8"), AES.MODE_EAX)
-    s = f"{session['github']}:{session['cas']}".encode("utf-8")
-    ciphertext, tag = aes.encrypt_and_digest(s)
-    json_k = ["nonce", "ciphertext", "tag"]
-    json_v = [base64.b64encode(x).decode("utf-8") for x in (aes.nonce, ciphertext, tag)]
-    info = json.dumps(dict(zip(json_k, json_v)))
-    return render_template(
-        "generate.html", token=base64.b64encode(info.encode("utf-8")).decode("utf-8")
-    )
+    message = f"{session['github']}:{session['cas']}"
+    signature = signing_key.sign(
+        message.encode("utf-8"), encoder=nacl.encoding.HexEncoder
+    ).signature.decode("utf-8")
+    return render_template("generate.html", token=f"{message}:{signature}")
 
 
 @app.route("/check", methods=["GET", "POST"])
 def check():
-    if "cas" not in session:
-        return redirect("auth")
-    if session["cas"] not in admin_list:
-        abort(403)
     if request.method == "GET":
         return render_template("check.html")
     elif request.method == "POST":
         try:
-            cipher = request.form.get("cipher")
-            info = json.loads(base64.b64decode(cipher))
-            json_k = ["nonce", "ciphertext", "tag"]
-            jv = {k: base64.b64decode(info[k]) for k in json_k}
-            aes = AES.new(passphrase.encode("utf-8"), AES.MODE_EAX, nonce=jv["nonce"])
-            plaintext = aes.decrypt_and_verify(jv["ciphertext"], jv["tag"])
-            return plaintext.decode("utf-8")
+            smessage = request.form["smessage"]
+            github, cas, signature = smessage.split(":")
+            message = f"{github}:{cas}".encode("utf-8")
+            verify_key.verify(message, signature=binascii.unhexlify(signature))
+            return f"OK. GitHub account = {github}, CAS account = {cas}"
         except Exception as e:
             traceback.print_exc()
-            return Response(f"decrypt failed: {e}", status=400)
+            return Response(f"verify failed: {e}", status=400)
