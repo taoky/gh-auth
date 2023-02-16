@@ -50,7 +50,7 @@ CAS_URL="https://passport.ustc.edu.cn/login"  # replace to your CAS server if no
 CAS_VALIDATE="https://passport.ustc.edu.cn/serviceValidate"
 CAS_REDIRECT="http://home.ustc.edu.cn/~zzh1996/cas_redirect.html"  # replace to your own redirect page.
 CAS_LOGOUT="https://passport.ustc.edu.cn/logout"
-SECRET="Secret for flask session"
+SECRET_KEY="Secret for flask session"
 HOST="https://ghauth.taoky.moe"  # GitHub auth relies on this value.
 ```
 
