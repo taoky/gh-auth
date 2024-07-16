@@ -1,0 +1,8 @@
+services:
+  ghauth:
+    image: ghcr.io/taoky/gh-auth:main
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:15000:80
+    volumes:
+      - ./app/config.py:/app/config.py

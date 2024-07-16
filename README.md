@@ -54,4 +54,7 @@ SECRET_KEY="Secret for flask session"
 HOST="https://ghauth.taoky.moe"  # GitHub auth relies on this value.
 ```
 
+> [!IMPORTANT]
+> The `home.ustc.edu.cn` trick no longer works since [2023/10/31](https://passport.ustc.edu.cn/doc/notice.html#id10). The demo is also not working now. You might need to apply for permission or build your own CAS service/proxy.
+
 This app uses no database and its security relies on the secrecy of `config.py`. If `config.py` leaks out then your GitHub oauth app will be compromised and user can generate forged tokens.
